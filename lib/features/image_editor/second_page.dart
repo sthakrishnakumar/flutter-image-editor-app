@@ -2,26 +2,51 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 
-class SecondPage extends StatelessWidget {
+class SecondPage extends StatefulWidget {
   final Uint8List imageData;
   const SecondPage({
     Key? key,
     required this.imageData,
   }) : super(key: key);
+
+  @override
+  State<SecondPage> createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  final controller = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('title'),
-      ),
-      body: Container(
-        constraints: BoxConstraints(
-          maxHeight: size.height,
-          maxWidth: size.width,
+    Widget imageWidget() => Container(
+          constraints: BoxConstraints(
+            maxHeight: size.height,
+            maxWidth: size.width,
+          ),
+          child: Image.memory(
+            widget.imageData,
+            fit: BoxFit.contain,
+            width: size.width,
+          ),
+        );
+
+    return Screenshot(
+      controller: controller,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('title'),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                final image = await controller.captureFromWidget(imageWidget());
+              },
+              child: const Text('Save Image'),
+            )
+          ],
         ),
-        child: Image.memory(imageData),
+        body: imageWidget(),
       ),
     );
   }
