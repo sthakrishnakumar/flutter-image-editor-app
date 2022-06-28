@@ -15,8 +15,27 @@ class SelectImage extends StatefulWidget {
 class _SelectImageState extends State<SelectImage> {
   File? image;
   final picker = ImagePicker();
-  Future getImage() async {
+  Future getImageCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+      });
+      Future.delayed(const Duration(seconds: 0)).then(
+        (value) => Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => EditImage(
+              arguments: [image],
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future getImageGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         image = File(pickedFile.path);
@@ -46,10 +65,16 @@ class _SelectImageState extends State<SelectImage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                getImage();
+                getImageCamera();
               },
-              child: const Text('Pick Image'),
+              child: const Text('Pick Image From Camera'),
             ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              getImageGallery();
+            },
+            child: const Text('Pick Image from Gallery'),
           ),
         ],
       ),
