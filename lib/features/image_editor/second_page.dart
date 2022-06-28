@@ -34,23 +34,27 @@ class _SecondPageState extends State<SecondPage> {
           ),
         );
 
-    return Screenshot(
-      controller: controller,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('title'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                // final image = await controller.captureFromWidget(imageWidget());
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('title'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              // final image = await controller.captureFromWidget(imageWidget());
+              if (widget.imageData.isNotEmpty) {
                 saveImage(widget.imageData);
-              },
-              child: const Text('Save Image'),
-            )
-          ],
-        ),
-        body: imageWidget(),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Image Saved Succesfully'),
+                  ),
+                );
+              }
+            },
+            child: const Text('Save Image'),
+          )
+        ],
       ),
+      body: imageWidget(),
     );
   }
 
