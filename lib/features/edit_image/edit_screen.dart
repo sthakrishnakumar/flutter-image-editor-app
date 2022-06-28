@@ -104,6 +104,7 @@ class _EditImageState extends State<EditImage> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: ListView(
+            shrinkWrap: true,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -124,9 +125,10 @@ class _EditImageState extends State<EditImage> {
                   child: Container(
                     color: Colors.white,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Spacer(flex: 3),
+                        const Spacer(flex: 1),
                         _buildSaturation(),
                         const Spacer(flex: 1),
                         _buildBrightness(),
@@ -154,17 +156,24 @@ class _EditImageState extends State<EditImage> {
         colorFilter: ColorFilter.matrix(
           calculateSaturationMatrix(sat),
         ),
-        child: ExtendedImage(
-          image: ExtendedFileImageProvider(image!),
-          color: bright > 0
-              ? Colors.white.withOpacity(bright)
-              : Colors.black.withOpacity(-bright),
-          colorBlendMode: bright > 0 ? BlendMode.lighten : BlendMode.darken,
-          height: MediaQuery.of(context).size.width,
-          width: MediaQuery.of(context).size.width,
-          extendedImageEditorKey: editorKey,
-          mode: ExtendedImageMode.editor,
-          fit: BoxFit.contain,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
+          child: ExtendedImage(
+            alignment: Alignment.topCenter,
+            image: ExtendedFileImageProvider(image!),
+            color: bright > 0
+                ? Colors.white.withOpacity(bright)
+                : Colors.black.withOpacity(-bright),
+            colorBlendMode: bright > 0 ? BlendMode.lighten : BlendMode.darken,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            extendedImageEditorKey: editorKey,
+            // mode: ExtendedImageMode.editor,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
