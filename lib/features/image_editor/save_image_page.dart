@@ -9,18 +9,18 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
-class SecondPage extends StatefulWidget {
+class SaveImagePage extends StatefulWidget {
   final Uint8List imageData;
-  const SecondPage({
+  const SaveImagePage({
     Key? key,
     required this.imageData,
   }) : super(key: key);
 
   @override
-  State<SecondPage> createState() => _SecondPageState();
+  State<SaveImagePage> createState() => _SaveImagePageState();
 }
 
-class _SecondPageState extends State<SecondPage> {
+class _SaveImagePageState extends State<SaveImagePage> {
   final controller = ScreenshotController();
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -6,7 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_image_editor/config/constant.dart';
 import 'dart:ui' as ui;
 
-import 'package:flutter_image_editor/features/image_editor/second_page.dart';
+import 'package:flutter_image_editor/features/image_editor/save_image_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImageFilter extends StatefulWidget {
   const ImageFilter({Key? key}) : super(key: key);
@@ -38,9 +40,20 @@ class _ImageFilterState extends State<ImageFilter> {
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (context) => SecondPage(imageData: uint8list),
+        builder: (context) => SaveImagePage(imageData: uint8list),
       ),
     );
+  }
+
+  File? _image;
+  final picker = ImagePicker();
+  Future getImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 
   @override
@@ -48,8 +61,16 @@ class _ImageFilterState extends State<ImageFilter> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Image Filter'),
         actions: [
+          Center(
+            child: InkWell(
+              onTap: () {},
+              child: const Text('Pick Image'),
+            ),
+          ),
+          const SizedBox(
+            width: 100,
+          ),
           IconButton(
             onPressed: convertWidgettoImage,
             icon: const Icon(Icons.check),

@@ -40,6 +40,8 @@ dependencies:
   permission_handler: ^10.0.0
   share_plus: ^4.0.10
   path_provider: ^2.0.11
+  image_picker: ^0.8.5+3
+  extended_image: ^6.2.1
 
 dev_dependencies:
   flutter_test:

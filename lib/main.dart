@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_image_editor/features/image_editor/image_filter/image_filter.dart';
+import 'package:flutter_image_editor/features/edit_image/select_image_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ImageFilter(),
+      home: const SelectImage(),
     );
   }
 }
