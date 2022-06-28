@@ -122,7 +122,7 @@ class _EditImageState extends State<EditImage> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  height: 360,
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: buildImage(),
@@ -209,7 +209,7 @@ class _EditImageState extends State<EditImage> {
             vertical: 10,
           ),
           child: ExtendedImage(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
             image: ExtendedFileImageProvider(image!),
             color: bright > 0
                 ? Colors.white.withOpacity(bright)
