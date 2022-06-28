@@ -1,7 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 
 class EditImage extends StatefulWidget {
   EditImage({Key? key, required this.arguments}) : super(key: key);
@@ -78,73 +82,116 @@ class _EditImageState extends State<EditImage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: bottomNavBar(),
-        appBar: AppBar(
-          title: const Text('Edit Image'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  sat = 1;
-                  bright = 0;
-                  con = 1;
-                });
-              },
-              icon: const Icon(Icons.settings_backup_restore),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.check),
-            ),
-          ],
-        ),
-        body: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: buildImage(),
-                ),
+    final controller = ScreenshotController();
+
+    return Screenshot(
+      controller: controller,
+      child: SafeArea(
+        child: Scaffold(
+          bottomNavigationBar: bottomNavBar(),
+          appBar: AppBar(
+            title: const Text('Edit Image'),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    sat = 1;
+                    bright = 0;
+                    con = 1;
+                  });
+                },
+                icon: const Icon(Icons.settings_backup_restore),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).size.width,
-                width: MediaQuery.of(context).size.width,
-                child: SliderTheme(
-                  data: const SliderThemeData(
-                    showValueIndicator: ShowValueIndicator.never,
+              IconButton(
+                onPressed: () async {
+                  final image = await controller.captureFromWidget(
+                    buildImage(),
+                  );
+                  if (image == null) return;
+                  await saveImage(image);
+                },
+                icon: const Icon(Icons.check),
+              ),
+            ],
+          ),
+          body: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: buildImage(),
                   ),
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(flex: 1),
-                        _buildSaturation(),
-                        const Spacer(flex: 1),
-                        _buildBrightness(),
-                        const Spacer(flex: 1),
-                        _buildContrast(),
-                        const Spacer(flex: 3),
-                      ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width,
+                  child: SliderTheme(
+                    data: const SliderThemeData(
+                      showValueIndicator: ShowValueIndicator.never,
+                    ),
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Spacer(flex: 1),
+                          _buildSaturation(),
+                          const Spacer(flex: 1),
+                          _buildBrightness(),
+                          const Spacer(flex: 1),
+                          _buildContrast(),
+                          const Spacer(flex: 3),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  // Future saveImage() async {
+  //   final ExtendedImageEditorState state = editorKey.currentState!;
+  //   final Uint8List img = state.rawImageData;
+  //   Future.delayed(const Duration(seconds: 1)).then(
+  //     (value) => Navigator.pushReplacement(
+  //       context,
+  //       CupertinoPageRoute(
+  //         builder: (context) => SaveImagePage(
+  //           imageData: img,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Future<String> saveImage(Uint8List bytes) async {
+    await [Permission.storage].request();
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(':', '-');
+    final name = 'Image $time';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Image Saved Succesfully'),
+      ),
+    );
+    return result['filePath'];
   }
 
   Widget buildImage() {
