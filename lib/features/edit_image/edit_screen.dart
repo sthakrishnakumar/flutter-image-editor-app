@@ -80,6 +80,7 @@ class _EditImageState extends State<EditImage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: bottomNavBar(),
         appBar: AppBar(
           title: const Text('Edit Image'),
           actions: [
@@ -169,17 +170,188 @@ class _EditImageState extends State<EditImage> {
     );
   }
 
+  Widget bottomNavBar() {
+    return BottomNavigationBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.flip,
+            color: Colors.white,
+          ),
+          label: 'Flip',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.rotate_left,
+            color: Colors.white,
+          ),
+          label: 'Rotate left',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.rotate_right,
+            color: Colors.white,
+          ),
+          label: 'Rotate right',
+        ),
+      ],
+      onTap: (int index) {
+        switch (index) {
+          case 0:
+            flip();
+            break;
+          case 1:
+            rotate(false);
+            break;
+          case 2:
+            rotate(true);
+            break;
+        }
+      },
+      currentIndex: 0,
+      selectedItemColor: Theme.of(context).primaryColor,
+      unselectedItemColor: Theme.of(context).primaryColor,
+    );
+  }
+
+  void flip() {
+    editorKey.currentState!.flip();
+  }
+
+  void rotate(bool right) {
+    editorKey.currentState!.rotate(right: right);
+  }
+
   Widget _buildSaturation() {
     return Row(
-      children: [],
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.03,
+        ),
+        Column(
+          children: <Widget>[
+            Icon(
+              Icons.brush,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            Text(
+              "Saturation",
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            )
+          ],
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Slider(
+            label: 'sat : ${sat.toStringAsFixed(2)}',
+            onChanged: (double value) {
+              setState(() {
+                sat = value;
+              });
+            },
+            divisions: 50,
+            value: sat,
+            min: 0,
+            max: 2,
+          ),
+        ),
+        Padding(
+          padding:
+              EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.08),
+          child: Text(sat.toStringAsFixed(2)),
+        ),
+      ],
     );
   }
 
   Widget _buildBrightness() {
-    return Row();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.03,
+        ),
+        Column(
+          children: <Widget>[
+            Icon(
+              Icons.brightness_4,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            Text(
+              "Brightness",
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            )
+          ],
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Slider(
+            label: bright.toStringAsFixed(2),
+            onChanged: (double value) {
+              setState(() {
+                bright = value;
+              });
+            },
+            divisions: 50,
+            value: bright,
+            min: -1,
+            max: 1,
+          ),
+        ),
+        Padding(
+          padding:
+              EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.08),
+          child: Text(bright.toStringAsFixed(2)),
+        ),
+      ],
+    );
   }
 
   Widget _buildContrast() {
-    return Row();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.03,
+        ),
+        Column(
+          children: <Widget>[
+            Icon(
+              Icons.color_lens,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            Text(
+              "Contrast",
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            )
+          ],
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Slider(
+            label: 'con : ${con.toStringAsFixed(2)}',
+            onChanged: (double value) {
+              setState(() {
+                con = value;
+              });
+            },
+            divisions: 50,
+            value: con,
+            min: 0,
+            max: 4,
+          ),
+        ),
+        Padding(
+          padding:
+              EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.08),
+          child: Text(con.toStringAsFixed(2)),
+        ),
+      ],
+    );
   }
 }
