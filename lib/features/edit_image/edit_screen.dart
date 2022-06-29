@@ -3,11 +3,13 @@ import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'dart:ui' as ui;
 
 class EditImage extends StatefulWidget {
   EditImage({Key? key, required this.arguments}) : super(key: key);
@@ -76,10 +78,51 @@ class _EditImageState extends State<EditImage> {
   }
 
   File? image;
+
   @override
   void initState() {
     super.initState();
     image = widget.arguments[0];
+  }
+
+  void convertWidgettoImage() async {
+    // await Future.delayed(const Duration(milliseconds: 100));
+    RenderRepaintBoundary renderRepaintBoundary =
+        // ignore: use_build_context_synchronously
+        editorKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    ui.Image boxImage = await renderRepaintBoundary.toImage(pixelRatio: 4);
+    ByteData? byteData =
+        await boxImage.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List uint8list = byteData!.buffer.asUint8List();
+
+    saveImage(uint8list);
+
+    // Navigator.push(
+    //   context,
+    //   CupertinoPageRoute(
+    //     builder: (context) => SaveImagePage(imageData: uint8list),
+    //   ),
+    // );
+  }
+
+  void saveImageandShare() async {
+    // await Future.delayed(const Duration(milliseconds: 100));
+    RenderRepaintBoundary renderRepaintBoundary =
+        // ignore: use_build_context_synchronously
+        editorKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    ui.Image boxImage = await renderRepaintBoundary.toImage(pixelRatio: 4);
+    ByteData? byteData =
+        await boxImage.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List uint8list = byteData!.buffer.asUint8List();
+
+    saveandShare(uint8list);
+
+    // Navigator.push(
+    //   context,
+    //   CupertinoPageRoute(
+    //     builder: (context) => SaveImagePage(imageData: uint8list),
+    //   ),
+    // );
   }
 
   @override
@@ -95,12 +138,13 @@ class _EditImageState extends State<EditImage> {
             title: const Text('Edit Image'),
             actions: [
               IconButton(
-                onPressed: () async {
-                  final image = await controller.captureFromWidget(
-                    buildImage(),
-                  );
-                  saveandShare(image);
-                },
+                onPressed: saveImageandShare,
+                // () async {
+                //   final image = await controller.captureFromWidget(
+                //     buildImage(),
+                //   );
+                //   saveandShare(image);
+                // },
                 icon: const Icon(Icons.share),
               ),
               IconButton(
@@ -114,13 +158,7 @@ class _EditImageState extends State<EditImage> {
                 icon: const Icon(Icons.settings_backup_restore),
               ),
               IconButton(
-                onPressed: () async {
-                  final image = await controller.captureFromWidget(
-                    buildImage(),
-                  );
-                  if (image == null) return;
-                  await saveImage(image);
-                },
+                onPressed: convertWidgettoImage,
                 icon: const Icon(Icons.check),
               ),
             ],
@@ -207,7 +245,7 @@ class _EditImageState extends State<EditImage> {
 
   Future saveandShare(Uint8List bytes) async {
     final directory = await getApplicationDocumentsDirectory();
-    final image = File('${directory.path}/flutter.png');
+    final image = File('${directory.path}/Nishant.png');
     image.writeAsBytesSync(bytes);
     await Share.shareFiles([image.path]);
   }
