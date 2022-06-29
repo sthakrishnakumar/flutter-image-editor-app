@@ -79,7 +79,7 @@ class _ImageFilterState extends State<ImageFilter> {
           ),
           IconButton(
             onPressed: convertWidgettoImage,
-            icon: const Icon(Icons.check),
+            icon: const Icon(Icons.arrow_forward),
           ),
         ],
       ),

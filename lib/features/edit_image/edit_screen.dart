@@ -146,7 +146,7 @@ class _EditImageState extends State<EditImage> {
             ),
             IconButton(
               onPressed: convertWidgettoImage,
-              icon: const Icon(Icons.check),
+              icon: const Icon(Icons.arrow_forward),
             ),
           ],
         ),

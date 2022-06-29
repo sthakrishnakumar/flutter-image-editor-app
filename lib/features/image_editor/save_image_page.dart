@@ -46,15 +46,14 @@ class _SaveImagePageState extends State<SaveImagePage> {
             },
             icon: const Icon(Icons.share),
           ),
-          ElevatedButton(
+          IconButton(
             onPressed: () {
-              // final image = await controller.captureFromWidget(imageWidget());
               if (widget.imageData.isNotEmpty) {
                 saveImage(widget.imageData);
               }
             },
-            child: const Text('Save Image'),
-          )
+            icon: const Icon(Icons.save),
+          ),
         ],
       ),
       body: Center(
