@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,6 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:ui' as ui;
 
 class EditImage extends StatefulWidget {
   EditImage({Key? key, required this.arguments}) : super(key: key);
@@ -130,13 +130,16 @@ class _EditImageState extends State<EditImage> {
               icon: const Icon(Icons.check),
             ),
           ],
-        ),
+        ),         
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: ListView(
             shrinkWrap: true,
             children: [
+              const SizedBox(
+                height: 10,
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 370,

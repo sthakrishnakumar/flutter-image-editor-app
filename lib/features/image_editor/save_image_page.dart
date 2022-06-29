@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 
 class SaveImagePage extends StatefulWidget {
   final Uint8List imageData;
+
   const SaveImagePage({
     Key? key,
     required this.imageData,
@@ -82,8 +83,13 @@ class _SaveImagePageState extends State<SaveImagePage> {
   }
 
   Future saveandShare(Uint8List bytes) async {
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(':', '-')
+        .toLowerCase();
     final directory = await getApplicationDocumentsDirectory();
-    final image = File('${directory.path}/flutter.png');
+    final image = File('${directory.path}/flutter-$time.png');
     image.writeAsBytesSync(bytes);
     await Share.shareFiles([image.path]);
   }

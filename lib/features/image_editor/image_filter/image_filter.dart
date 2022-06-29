@@ -45,13 +45,13 @@ class _ImageFilterState extends State<ImageFilter> {
     );
   }
 
-  File? image;
+  File? _image;
   final picker = ImagePicker();
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        image = File(pickedFile.path);
+        _image = File(pickedFile.path);
       });
     }
   }
@@ -86,20 +86,19 @@ class _ImageFilterState extends State<ImageFilter> {
               maxWidth: size.width,
             ),
             child: PageView.builder(
-              itemCount: filters.length,
-              itemBuilder: (context, index) {
-                return ColorFiltered(
-                  colorFilter: ColorFilter.matrix(
-                    filters[index],
-                  ),
-                  child: Image.network(
-                    Constant.flowerImage,
-                    width: size.width,
-                    fit: BoxFit.contain,
-                  ),
-                );
-              },
-            ),
+                itemCount: filters.length,
+                itemBuilder: (context, index) {
+                  return ColorFiltered(
+                    colorFilter: ColorFilter.matrix(
+                      filters[index],
+                    ),
+                    child: Image.network(
+                      Constant.flowerImage,
+                      width: size.width,
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                }),
           ),
         ),
       ),
