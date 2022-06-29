@@ -126,7 +126,7 @@ class _EditImageState extends State<EditImage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: bottomNavBar(),
+        // bottomNavigationBar: bottomNavBar(),
         appBar: AppBar(
           title: const Text('Edit Image'),
           actions: [
