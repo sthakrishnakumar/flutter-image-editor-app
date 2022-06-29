@@ -95,6 +95,15 @@ class _EditImageState extends State<EditImage> {
             title: const Text('Edit Image'),
             actions: [
               IconButton(
+                onPressed: () async {
+                  final image = await controller.captureFromWidget(
+                    buildImage(),
+                  );
+                  saveandShare(image);
+                },
+                icon: const Icon(Icons.share),
+              ),
+              IconButton(
                 onPressed: () {
                   setState(() {
                     sat = 1;
