@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
+// ignore: must_be_immutable
 class EditImage extends StatefulWidget {
   EditImage({Key? key, required this.arguments}) : super(key: key);
   List arguments;
@@ -130,7 +131,7 @@ class _EditImageState extends State<EditImage> {
               icon: const Icon(Icons.check),
             ),
           ],
-        ),         
+        ),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,

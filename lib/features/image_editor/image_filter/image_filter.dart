@@ -10,8 +10,10 @@ import 'dart:ui' as ui;
 import 'package:flutter_image_editor/features/image_editor/save_image_page.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class ImageFilter extends StatefulWidget {
-  const ImageFilter({Key? key}) : super(key: key);
+  ImageFilter({Key? key, required this.imageData}) : super(key: key);
+  Uint8List imageData;
 
   @override
   State<ImageFilter> createState() => _ImageFilterState();
@@ -45,13 +47,13 @@ class _ImageFilterState extends State<ImageFilter> {
     );
   }
 
-  File? _image;
+  File? image;
   final picker = ImagePicker();
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        image = File(pickedFile.path);
       });
     }
   }
@@ -92,8 +94,8 @@ class _ImageFilterState extends State<ImageFilter> {
                     colorFilter: ColorFilter.matrix(
                       filters[index],
                     ),
-                    child: Image.network(
-                      Constant.flowerImage,
+                    child: Image.memory(
+                      widget.imageData,
                       width: size.width,
                       fit: BoxFit.contain,
                     ),
