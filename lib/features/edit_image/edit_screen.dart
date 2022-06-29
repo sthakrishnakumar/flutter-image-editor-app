@@ -6,7 +6,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_image_editor/features/image_editor/save_image_page.dart';
+import 'package:flutter_image_editor/features/image_editor/image_filter/image_filter.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -103,7 +103,9 @@ class _EditImageState extends State<EditImage> {
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (context) => SaveImagePage(imageData: uint8list),
+        builder: (context) =>
+            // SaveImagePage(imageData: uint8list)
+            ImageFilter(imageData: uint8list),
       ),
     );
   }
@@ -132,50 +134,53 @@ class _EditImageState extends State<EditImage> {
             ),
           ],
         ),
-        body: SizedBox(
+        body: Container(
+          color: Colors.green,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 370,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: buildImage(),
+          child: SingleChildScrollView(
+            child: Column(
+              // shrinkWrap: true,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).size.width,
-                width: MediaQuery.of(context).size.width,
-                child: SliderTheme(
-                  data: const SliderThemeData(
-                    showValueIndicator: ShowValueIndicator.never,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: buildImage(),
                   ),
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(flex: 1),
-                        _buildSaturation(),
-                        const Spacer(flex: 1),
-                        _buildBrightness(),
-                        const Spacer(flex: 1),
-                        _buildContrast(),
-                        const Spacer(flex: 3),
-                      ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width,
+                  child: SliderTheme(
+                    data: const SliderThemeData(
+                      showValueIndicator: ShowValueIndicator.never,
+                    ),
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Spacer(flex: 1),
+                          _buildSaturation(),
+                          const Spacer(flex: 1),
+                          _buildBrightness(),
+                          const Spacer(flex: 1),
+                          _buildContrast(),
+                          const Spacer(flex: 3),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -243,7 +248,7 @@ class _EditImageState extends State<EditImage> {
             width: MediaQuery.of(context).size.width,
             // extendedImageEditorKey: editorKey,
             // mode: ExtendedImageMode.editor,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
           ),
         ),
       ),

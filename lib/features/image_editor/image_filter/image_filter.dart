@@ -22,6 +22,7 @@ class ImageFilter extends StatefulWidget {
 class _ImageFilterState extends State<ImageFilter> {
   final GlobalKey globalKey = GlobalKey();
   final List<List<double>> filters = [
+    Constant.noFilter,
     Constant.sepium,
     Constant.blackandwhite,
     Constant.coldLife,
@@ -83,24 +84,26 @@ class _ImageFilterState extends State<ImageFilter> {
         child: RepaintBoundary(
           key: globalKey,
           child: Container(
+            width: size.width,
             constraints: BoxConstraints(
               maxHeight: size.height,
               maxWidth: size.width,
             ),
             child: PageView.builder(
-                itemCount: filters.length,
-                itemBuilder: (context, index) {
-                  return ColorFiltered(
-                    colorFilter: ColorFilter.matrix(
-                      filters[index],
-                    ),
-                    child: Image.memory(
-                      widget.imageData,
-                      width: size.width,
-                      fit: BoxFit.contain,
-                    ),
-                  );
-                }),
+              itemCount: filters.length,
+              itemBuilder: (context, index) {
+                return ColorFiltered(
+                  colorFilter: ColorFilter.matrix(
+                    filters[index],
+                  ),
+                  child: Image.memory(
+                    widget.imageData,
+                    width: size.width,
+                    fit: BoxFit.contain,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
