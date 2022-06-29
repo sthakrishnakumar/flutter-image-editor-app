@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SaveImagePage extends StatefulWidget {
@@ -21,7 +20,6 @@ class SaveImagePage extends StatefulWidget {
 }
 
 class _SaveImagePageState extends State<SaveImagePage> {
-  final controller = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -72,7 +70,9 @@ class _SaveImagePageState extends State<SaveImagePage> {
         .replaceAll(':', '-');
     final name = 'Image $time';
     final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).clearSnackBars();
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Image Saved Succesfully'),

@@ -2,12 +2,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_image_editor/features/image_editor/save_image_page.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:ui' as ui;
 
@@ -95,87 +96,82 @@ class _EditImageState extends State<EditImage> {
     ByteData? byteData =
         await boxImage.toByteData(format: ui.ImageByteFormat.png);
     Uint8List uint8list = byteData!.buffer.asUint8List();
-    saveImage(uint8list);
+    // saveImage(uint8list);
 
-    // ignore: use_build_context_synchronously
-    // Navigator.push(
-    //   context,
-    //   CupertinoPageRoute(
-    //     builder: (context) => SaveImagePage(imageData: uint8list),
-    //   ),
-    // );
+    //ignore: use_build_context_synchronously
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => SaveImagePage(imageData: uint8list),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller = ScreenshotController();
-
-    return Screenshot(
-      controller: controller,
-      child: SafeArea(
-        child: Scaffold(
-          bottomNavigationBar: bottomNavBar(),
-          appBar: AppBar(
-            title: const Text('Edit Image'),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    sat = 1;
-                    bright = 0;
-                    con = 1;
-                  });
-                },
-                icon: const Icon(Icons.settings_backup_restore),
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: bottomNavBar(),
+        appBar: AppBar(
+          title: const Text('Edit Image'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  sat = 1;
+                  bright = 0;
+                  con = 1;
+                });
+              },
+              icon: const Icon(Icons.settings_backup_restore),
+            ),
+            IconButton(
+              onPressed: convertWidgettoImage,
+              icon: const Icon(Icons.check),
+            ),
+          ],
+        ),
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 370,
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: buildImage(),
+                ),
               ),
-              IconButton(
-                onPressed: convertWidgettoImage,
-                icon: const Icon(Icons.check),
+              SizedBox(
+                height: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width,
+                child: SliderTheme(
+                  data: const SliderThemeData(
+                    showValueIndicator: ShowValueIndicator.never,
+                  ),
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Spacer(flex: 1),
+                        _buildSaturation(),
+                        const Spacer(flex: 1),
+                        _buildBrightness(),
+                        const Spacer(flex: 1),
+                        _buildContrast(),
+                        const Spacer(flex: 3),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
-          ),
-          body: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 370,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: buildImage(),
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width,
-                  child: SliderTheme(
-                    data: const SliderThemeData(
-                      showValueIndicator: ShowValueIndicator.never,
-                    ),
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Spacer(flex: 1),
-                          _buildSaturation(),
-                          const Spacer(flex: 1),
-                          _buildBrightness(),
-                          const Spacer(flex: 1),
-                          _buildContrast(),
-                          const Spacer(flex: 3),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
