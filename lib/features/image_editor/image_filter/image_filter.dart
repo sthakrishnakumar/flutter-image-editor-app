@@ -27,9 +27,16 @@ class _ImageFilterState extends State<ImageFilter> {
     Constant.blackandwhite,
     Constant.coldLife,
     Constant.oldTimes,
-    Constant.coldLife,
     Constant.milk,
   ];
+  // List<String> filter = [
+  //   'No Filter',
+  //   'Sepium',
+  //   'Black and White',
+  //   'Cold Life',
+  //   'Old Times',
+  //   'Milk',
+  // ];
   void convertWidgettoImage() async {
     // await Future.delayed(const Duration(milliseconds: 100));
     RenderRepaintBoundary renderRepaintBoundary =
@@ -62,15 +69,11 @@ class _ImageFilterState extends State<ImageFilter> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Filter Page'),
         actions: [
-          Center(
-            child: InkWell(
-              onTap: () {},
-              child: const Text('Pick Image'),
-            ),
-          ),
           const SizedBox(
             width: 100,
           ),
@@ -92,14 +95,20 @@ class _ImageFilterState extends State<ImageFilter> {
             child: PageView.builder(
               itemCount: filters.length,
               itemBuilder: (context, index) {
-                return ColorFiltered(
-                  colorFilter: ColorFilter.matrix(
-                    filters[index],
-                  ),
-                  child: Image.memory(
-                    widget.imageData,
-                    width: size.width,
-                    fit: BoxFit.contain,
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ColorFiltered(
+                        colorFilter: ColorFilter.matrix(
+                          filters[index],
+                        ),
+                        child: Image.memory(
+                          widget.imageData,
+                          width: size.width,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },

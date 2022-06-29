@@ -110,6 +110,18 @@ class _EditImageState extends State<EditImage> {
     );
   }
 
+  void convertWidget() async {
+    // await Future.delayed(const Duration(milliseconds: 100));
+    RenderRepaintBoundary renderRepaintBoundary =
+        // ignore: use_build_context_synchronously
+        globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    ui.Image boxImage = await renderRepaintBoundary.toImage(pixelRatio: 4);
+    ByteData? byteData =
+        await boxImage.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List uint8list = byteData!.buffer.asUint8List();
+    saveImage(uint8list);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -118,6 +130,10 @@ class _EditImageState extends State<EditImage> {
         appBar: AppBar(
           title: const Text('Edit Image'),
           actions: [
+            IconButton(
+              onPressed: convertWidget,
+              icon: const Icon(Icons.save),
+            ),
             IconButton(
               onPressed: () {
                 setState(() {

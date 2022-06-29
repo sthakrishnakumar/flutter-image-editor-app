@@ -38,7 +38,7 @@ class _SaveImagePageState extends State<SaveImagePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('title'),
+        title: const Text('Save Image'),
         actions: [
           IconButton(
             onPressed: () {
@@ -89,7 +89,7 @@ class _SaveImagePageState extends State<SaveImagePage> {
         .replaceAll(':', '-')
         .toLowerCase();
     final directory = await getApplicationDocumentsDirectory();
-    final image = File('${directory.path}/flutter-$time.png');
+    final image = File('${directory.path}/flutter-$time.jpg');
     image.writeAsBytesSync(bytes);
     await Share.shareFiles([image.path]);
   }
