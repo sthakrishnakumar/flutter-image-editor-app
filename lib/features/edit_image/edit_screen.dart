@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 class EditImage extends StatefulWidget {
   EditImage({Key? key, required this.arguments}) : super(key: key);
@@ -192,6 +194,13 @@ class _EditImageState extends State<EditImage> {
       ),
     );
     return result['filePath'];
+  }
+
+  Future saveandShare(Uint8List bytes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final image = File('${directory.path}/flutter.png');
+    image.writeAsBytesSync(bytes);
+    await Share.shareFiles([image.path]);
   }
 
   Widget buildImage() {
