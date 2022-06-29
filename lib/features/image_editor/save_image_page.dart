@@ -58,7 +58,9 @@ class _SaveImagePageState extends State<SaveImagePage> {
           )
         ],
       ),
-      body: imageWidget(),
+      body: Center(
+        child: imageWidget(),
+      ),
     );
   }
 

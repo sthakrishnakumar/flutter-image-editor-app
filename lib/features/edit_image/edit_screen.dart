@@ -20,6 +20,7 @@ class EditImage extends StatefulWidget {
 }
 
 class _EditImageState extends State<EditImage> {
+  final GlobalKey globalKey = GlobalKey();
   final GlobalKey<ExtendedImageEditorState> editorKey =
       GlobalKey<ExtendedImageEditorState>();
 
@@ -89,34 +90,14 @@ class _EditImageState extends State<EditImage> {
     // await Future.delayed(const Duration(milliseconds: 100));
     RenderRepaintBoundary renderRepaintBoundary =
         // ignore: use_build_context_synchronously
-        editorKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+        globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     ui.Image boxImage = await renderRepaintBoundary.toImage(pixelRatio: 4);
     ByteData? byteData =
         await boxImage.toByteData(format: ui.ImageByteFormat.png);
     Uint8List uint8list = byteData!.buffer.asUint8List();
-
     saveImage(uint8list);
 
-    // Navigator.push(
-    //   context,
-    //   CupertinoPageRoute(
-    //     builder: (context) => SaveImagePage(imageData: uint8list),
-    //   ),
-    // );
-  }
-
-  void saveImageandShare() async {
-    // await Future.delayed(const Duration(milliseconds: 100));
-    RenderRepaintBoundary renderRepaintBoundary =
-        // ignore: use_build_context_synchronously
-        editorKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    ui.Image boxImage = await renderRepaintBoundary.toImage(pixelRatio: 4);
-    ByteData? byteData =
-        await boxImage.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List uint8list = byteData!.buffer.asUint8List();
-
-    saveandShare(uint8list);
-
+    // ignore: use_build_context_synchronously
     // Navigator.push(
     //   context,
     //   CupertinoPageRoute(
@@ -137,16 +118,6 @@ class _EditImageState extends State<EditImage> {
           appBar: AppBar(
             title: const Text('Edit Image'),
             actions: [
-              IconButton(
-                onPressed: saveImageandShare,
-                // () async {
-                //   final image = await controller.captureFromWidget(
-                //     buildImage(),
-                //   );
-                //   saveandShare(image);
-                // },
-                icon: const Icon(Icons.share),
-              ),
               IconButton(
                 onPressed: () {
                   setState(() {
@@ -171,7 +142,7 @@ class _EditImageState extends State<EditImage> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: 360,
+                  height: 370,
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: buildImage(),
@@ -251,18 +222,15 @@ class _EditImageState extends State<EditImage> {
   }
 
   Widget buildImage() {
-    return ColorFiltered(
-      colorFilter: ColorFilter.matrix(
-        calculateContrastMatrix(con),
-      ),
+    return RepaintBoundary(
+      key: globalKey,
       child: ColorFiltered(
         colorFilter: ColorFilter.matrix(
-          calculateSaturationMatrix(sat),
+          calculateContrastMatrix(con),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 10,
+        child: ColorFiltered(
+          colorFilter: ColorFilter.matrix(
+            calculateSaturationMatrix(sat),
           ),
           child: ExtendedImage(
             alignment: Alignment.center,
@@ -273,7 +241,7 @@ class _EditImageState extends State<EditImage> {
             colorBlendMode: bright > 0 ? BlendMode.lighten : BlendMode.darken,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            extendedImageEditorKey: editorKey,
+            // extendedImageEditorKey: editorKey,
             // mode: ExtendedImageMode.editor,
             fit: BoxFit.contain,
           ),
