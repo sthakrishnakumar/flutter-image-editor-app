@@ -6,11 +6,12 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_image_editor/features/image_editor/image_filter/image_filter.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../image_editor/save_image_page.dart';
 
 // ignore: must_be_immutable
 class EditImage extends StatefulWidget {
@@ -97,15 +98,12 @@ class _EditImageState extends State<EditImage> {
     ByteData? byteData =
         await boxImage.toByteData(format: ui.ImageByteFormat.png);
     Uint8List uint8list = byteData!.buffer.asUint8List();
-    // saveImage(uint8list);
 
     //ignore: use_build_context_synchronously
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (context) =>
-            // SaveImagePage(imageData: uint8list)
-            ImageFilter(imageData: uint8list),
+        builder: (context) => SaveImagePage(imageData: uint8list),
       ),
     );
   }
@@ -124,6 +122,12 @@ class _EditImageState extends State<EditImage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    final h = size.height;
+    final w = size.width;
+    const gap = SizedBox(
+      height: 10,
+    );
     return SafeArea(
       child: Scaffold(
         // bottomNavigationBar: bottomNavBar(),
@@ -150,54 +154,42 @@ class _EditImageState extends State<EditImage> {
             ),
           ],
         ),
-        body: Container(
-          color: Colors.green,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Column(
-              // shrinkWrap: true,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: buildImage(),
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width,
-                  child: SliderTheme(
-                    data: const SliderThemeData(
-                      showValueIndicator: ShowValueIndicator.never,
-                    ),
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Spacer(flex: 1),
-                          _buildSaturation(),
-                          const Spacer(flex: 1),
-                          _buildBrightness(),
-                          const Spacer(flex: 1),
-                          _buildContrast(),
-                          const Spacer(flex: 3),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+        body: Stack(
+          clipBehavior: ui.Clip.none,
+          alignment: Alignment.topCenter,
+          children: [
+            Container(color: Colors.grey[300]),
+            SizedBox(
+              height: 550,
+              child: buildImage(),
             ),
-          ),
+            Container(
+              margin: const EdgeInsets.only(top: 550),
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width,
+              child: SliderTheme(
+                data: const SliderThemeData(
+                  showValueIndicator: ShowValueIndicator.never,
+                ),
+                child: Container(
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      gap,
+                      _buildSaturation(),
+                      gap,
+                      _buildBrightness(),
+                      gap,
+                      _buildContrast(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -226,7 +218,9 @@ class _EditImageState extends State<EditImage> {
         .replaceAll(':', '-');
     final name = 'Image $time';
     final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).clearSnackBars();
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Image Saved Succesfully'),
@@ -264,7 +258,7 @@ class _EditImageState extends State<EditImage> {
             width: MediaQuery.of(context).size.width,
             // extendedImageEditorKey: editorKey,
             // mode: ExtendedImageMode.editor,
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           ),
         ),
       ),
