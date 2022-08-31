@@ -31,7 +31,7 @@ class _SaveImagePageState extends State<SaveImagePage> {
           ),
           child: Image.memory(
             widget.imageData,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             width: size.width,
           ),
         );
