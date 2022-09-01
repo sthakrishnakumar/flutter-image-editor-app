@@ -138,25 +138,56 @@ class _EditImageState extends State<EditImage> {
         // bottomNavigationBar: bottomNavBar(),
         appBar: AppBar(
           title: const Text('Edit Image'),
+          leading: isEditClicked
+              ? InkWell(
+                  onTap: () {
+                    setState(() {
+                      isEditClicked = false;
+                      sat = 1;
+                      bright = 0;
+                      con = 1;
+                    });
+                  },
+                  child: Icon(Icons.close),
+                )
+              : InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Icons.arrow_back),
+                ),
           actions: [
-            IconButton(
-              onPressed: convertWidget,
-              icon: const Icon(Icons.save),
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  sat = 1;
-                  bright = 0;
-                  con = 1;
-                });
-              },
-              icon: const Icon(Icons.settings_backup_restore),
-            ),
-            IconButton(
-              onPressed: convertWidgettoImage,
-              icon: const Icon(Icons.arrow_forward),
-            ),
+            // IconButton(
+            //   onPressed: convertWidget,
+            //   icon: const Icon(Icons.save),
+            // ),
+            isEditClicked
+                ? IconButton(
+                    padding: EdgeInsets.only(right: 50),
+                    onPressed: () {
+                      setState(() {
+                        sat = 1;
+                        bright = 0;
+                        con = 1;
+                      });
+                    },
+                    icon: const Icon(Icons.settings_backup_restore),
+                  )
+                : Text(''),
+            isEditClicked
+                ? Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          isEditClicked = false;
+                        });
+                      },
+                      child: Icon(Icons.check),
+                    ),
+                  )
+                : IconButton(
+                    onPressed: convertWidgettoImage,
+                    icon: Text('Next'),
+                  ),
           ],
         ),
         body: Stack(
@@ -165,7 +196,7 @@ class _EditImageState extends State<EditImage> {
           children: [
             Container(color: Colors.grey[300]),
             SizedBox(
-              height: 550,
+              height: h * 0.72,
               child: buildImage(),
             ),
             Container(
@@ -173,6 +204,10 @@ class _EditImageState extends State<EditImage> {
               height: MediaQuery.of(context).size.height -
                   MediaQuery.of(context).size.width,
               width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: isEditClicked ? Colors.purple[100] : Colors.grey[300],
+              ),
               child: SliderTheme(
                 data: const SliderThemeData(
                   showValueIndicator: ShowValueIndicator.never,
@@ -186,9 +221,9 @@ class _EditImageState extends State<EditImage> {
                           children: [
                             isSaturation
                                 ? _buildSaturation()
-                                : isBrightness
-                                    ? _buildBrightness()
-                                    : _buildContrast(),
+                                : isContrast
+                                    ? _buildContrast()
+                                    : _buildBrightness(),
                             SizedBox(
                               height: h * 0.02,
                             ),
@@ -466,6 +501,8 @@ class _EditImageState extends State<EditImage> {
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.6,
           child: Slider(
+            activeColor: Colors.green[500],
+            inactiveColor: Colors.grey[400],
             label: bright.toStringAsFixed(2),
             onChanged: (double value) {
               setState(() {
@@ -510,6 +547,8 @@ class _EditImageState extends State<EditImage> {
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.6,
           child: Slider(
+            activeColor: Colors.green[500],
+            inactiveColor: Colors.grey[400],
             label: 'con : ${con.toStringAsFixed(2)}',
             onChanged: (double value) {
               setState(() {

@@ -57,7 +57,70 @@ class _SaveImagePageState extends State<SaveImagePage> {
         ],
       ),
       body: Center(
-        child: imageWidget(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            imageWidget(),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      saveandShare(widget.imageData);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Text('Share'),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(Icons.share),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (widget.imageData.isNotEmpty) {
+                        saveImage(widget.imageData);
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Save',
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(Icons.save),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
