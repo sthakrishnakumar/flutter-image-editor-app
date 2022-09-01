@@ -57,10 +57,12 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[300],
         onPressed: () => getImageGallery(),
-        child: const Icon(
+        child: Icon(
           Icons.add,
-          size: 40,
+          size: 45,
+          color: Colors.green[400],
         ),
       ),
       appBar: AppBar(

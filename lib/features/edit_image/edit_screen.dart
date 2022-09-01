@@ -27,6 +27,11 @@ class _EditImageState extends State<EditImage> {
   final GlobalKey<ExtendedImageEditorState> editorKey =
       GlobalKey<ExtendedImageEditorState>();
 
+  bool isEditClicked = false;
+  bool isSaturation = false;
+  bool isBrightness = false;
+  bool isContrast = false;
+
   double sat = 1;
   double bright = 0;
   double con = 1;
@@ -164,7 +169,7 @@ class _EditImageState extends State<EditImage> {
               child: buildImage(),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 550),
+              margin: EdgeInsets.only(top: isEditClicked ? h * 0.75 : h * 0.8),
               height: MediaQuery.of(context).size.height -
                   MediaQuery.of(context).size.width,
               width: MediaQuery.of(context).size.width,
@@ -172,21 +177,93 @@ class _EditImageState extends State<EditImage> {
                 data: const SliderThemeData(
                   showValueIndicator: ShowValueIndicator.never,
                 ),
-                child: Container(
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      gap,
-                      _buildSaturation(),
-                      gap,
-                      _buildBrightness(),
-                      gap,
-                      _buildContrast(),
-                    ],
-                  ),
-                ),
+                child: isEditClicked
+                    ? Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isSaturation
+                                ? _buildSaturation()
+                                : isBrightness
+                                    ? _buildBrightness()
+                                    : _buildContrast(),
+                            SizedBox(
+                              height: h * 0.02,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isSaturation = true;
+                                      isBrightness = false;
+                                      isContrast = false;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.brush,
+                                    color: isSaturation
+                                        ? Colors.black
+                                        : Colors.grey,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isSaturation = false;
+                                      isBrightness = true;
+                                      isContrast = false;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.brightness_4,
+                                    color: isBrightness
+                                        ? Colors.black
+                                        : Colors.grey,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isSaturation = false;
+                                      isBrightness = false;
+                                      isContrast = true;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.color_lens,
+                                    color:
+                                        isContrast ? Colors.black : Colors.grey,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isEditClicked = true;
+                                });
+                              },
+                              child: Text('Edit Image'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text('Super Resolution'),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
             ),
           ],
@@ -330,17 +407,21 @@ class _EditImageState extends State<EditImage> {
           children: <Widget>[
             Icon(
               Icons.brush,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Colors.blueAccent,
             ),
             Text(
               "Saturation",
-              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             )
           ],
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.6,
           child: Slider(
+            activeColor: Colors.green[500],
+            inactiveColor: Colors.grey[400],
             label: 'sat : ${sat.toStringAsFixed(2)}',
             onChanged: (double value) {
               setState(() {

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_editor/features/edit_image/select_image_page.dart';
+import 'package:flutter_image_editor/features/edit_image/dashboard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -30,20 +30,17 @@ class _ClassNameState extends State<OnboardingScreen> {
       BuildPage(
         color: color,
         urlImage: 'assets/onboard1.png',
-        title: 'Hello 1',
-        subtitle: 'This is on board page',
+        title: 'Boost image quality with Super Resolution',
       ),
       BuildPage(
         color: color,
         urlImage: 'assets/onboard2.png',
-        title: 'Hello 2',
-        subtitle: 'This is on board page',
+        title: 'Upsample low-resolution images',
       ),
       BuildPage(
         color: color,
         urlImage: 'assets/onboard3.png',
-        title: 'Hello 3',
-        subtitle: 'This is on board page',
+        title: 'Showcase incredible detail',
       ),
     ];
 
@@ -68,7 +65,7 @@ class _ClassNameState extends State<OnboardingScreen> {
                 return TextButton(
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                     primary: Colors.white,
                     backgroundColor: Colors.teal.shade700,
@@ -87,7 +84,7 @@ class _ClassNameState extends State<OnboardingScreen> {
                   child: Text(
                     'Get Started',
                     style: TextStyle(
-                      fontSize: width * 0.04,
+                      fontSize: width * 0.05,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.0,
                     ),
@@ -153,13 +150,11 @@ class BuildPage extends StatelessWidget {
     required this.color,
     required this.urlImage,
     required this.title,
-    required this.subtitle,
   }) : super(key: key);
 
   Color color;
   String urlImage;
   String title;
-  String subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +179,7 @@ class BuildPage extends StatelessWidget {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: 17,
               ),
             ),
           ),
